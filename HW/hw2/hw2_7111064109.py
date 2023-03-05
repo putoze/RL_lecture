@@ -91,3 +91,5 @@ if __name__ == '__main__':
     print(V_matrix_round.reshape(5, 5))
     print('R_matrix')
     print(R_matrix.reshape(5, 5))
+    print("P_matrix")
+    print(P_matrix.reshape(SIZE, 5, 5))
