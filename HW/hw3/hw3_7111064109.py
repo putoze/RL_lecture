@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
-from numpy.linalg import inv
 import numpy as np
-import copy
 
 # local define
 SIZE = 25
@@ -47,54 +45,30 @@ def draw_table(V_matrix):
     ax = plt.table(cellText=V_matrix,
                    cellLoc='center',
                    bbox=[0, 0, 1, 1])
-    plt.title('Bellman Equation')
+    plt.title('value function')
     plt.show()
 
 
-def draw_policy(V_matrix):
+def draw_policy(val_space):
     fig, ax = plt.subplots()
     ax.axis('off')
     ax.axis('tight')
-    val_space = np.zeros((5, 5)).astype('str')
-    for j in range(5):
-        for i in range(5):
-            values = []
-            val = ''
-            for idx in range(len(action_list)):
-                (x, y), reward = step(np.array([i, j]), action_list[idx])
-                nxt_idx = 5*y + x
-                # finding greatest policy
-                values.append(reward + gamma * V_matrix[nxt_idx])
-                #print(mat_idx, nxt_idx, reward, value)
-            best_actions = np.where(values == np.max(values))[0]
-            for ba in best_actions:
-                val += actions_flags[ba]
-            val_space[(j, i)] = val
-    # final method
-    print('direct matrix solution')
-    print(val_space)
     ax = plt.table(cellText=val_space,
                    cellLoc='center',
                    bbox=[0, 0, 1, 1])
+    plt.title('direct matrix solution')
     plt.show()
 
 
 def cal(P_matrix, R_matrix):
-    location = np.array([0, 0])
-    while not (location[1] == 5):
-        i, j = location
-        mat_idx = 5*j + i
-        for action in action_list:
-            (x, y), reward = step(location, action)
-            nxt_idx = 5*y + x
-            R_matrix[mat_idx] += reward*probability
-            P_matrix[mat_idx][nxt_idx] += probability
-        # idx update
-        if (i == 4):
-            location[0] = 0
-            location[1] += 1
-        else:
-            location[0] += 1
+    for j in range(5):
+        for i in range(5):
+            mat_idx = 5*j + i
+            for action in action_list:
+                (x, y), reward = step(np.array([i, j]), action)
+                nxt_idx = 5*y + x
+                R_matrix[mat_idx] += reward*probability
+                P_matrix[mat_idx][nxt_idx] += probability
 
 
 '''
@@ -110,39 +84,48 @@ def cal_itr(V_matrix):
     # Iterate from step 2
     while True:
         V_matrix_final = np.zeros_like(V_matrix)
+        val_space = np.zeros((5, 5)).astype('str')  # string type
         for j in range(5):
             for i in range(5):
-                mat_idx = 5*j + i
-                value_max = -999
+                mat_idx = 5*j + i  # location
+                value_max = -999  # initial minimum value
+                idx = 0
                 for action in action_list:
                     (x, y), reward = step(np.array([i, j]), action)
                     nxt_idx = 5*y + x
                     # Compute the value
                     value = reward + gamma * V_matrix[nxt_idx]
                     # Generate a new better (or equal) policy
-                    value_max = max(value_max, value)
+                    if value > value_max:
+                        value_max = value
+                        val_space[(j, i)] = actions_flags[idx]
+                    elif value == value_max:
+                        val_space[(j, i)] += actions_flags[idx]
+                    # update action idx
+                    idx += 1
+
                 # optimal value function
                 V_matrix_final[mat_idx] = value_max
         # test if Converge or not
-        if np.sum(np.abs(V_matrix_final - V_matrix)) < 1e-4:
-            return V_matrix_final
+        if np.max(np.abs(V_matrix_final - V_matrix)) < 1e-4:
+            return V_matrix_final, val_space
+        # update V_matrix
         V_matrix = V_matrix_final
 
 
 if __name__ == '__main__':
     # create P_matrix,R_matrix
     P_matrix, R_matrix = create_matrix()
-    I_matrix = np.eye(SIZE, dtype='float64')
     cal(P_matrix, R_matrix)
     # create random V_matrix
     V_matrix = np.random.rand(SIZE, 1)
     # ------ HW3 part1 synchronous iterative ------
     delta = 0
-    while delta >= 0:
+    while True:
         V_matrix_tmp = V_matrix
         V_matrix = R_matrix + gamma*np.dot(P_matrix, V_matrix_tmp)
-        delta = np.sum(np.abs(V_matrix - V_matrix_tmp))
-        # delta = max(delta_tmp, delta)
+        delta = np.max(np.abs(V_matrix - V_matrix_tmp))
+        # delta need to be small enough
         if delta < 1e-4:
             break
     # rounding
@@ -152,12 +135,14 @@ if __name__ == '__main__':
     print('V_matrix_round,HW3 Part1')
     print(V_matrix_round.reshape(5, 5))
     # ------ HW3 part2 Optimal Value function ------
-    V_matrix = cal_itr(V_matrix)
+    V_matrix, val_space = cal_itr(V_matrix)
     # rounding
     V_matrix_round = np.round(V_matrix, decimals=1)
     # display
     draw_table(V_matrix_round.reshape(5, 5))
     print('V_matrix_round,HW3 Part2')
     print(V_matrix_round.reshape(5, 5))
-    draw_policy(V_matrix)
+    print('direct matrix solution')
+    print(val_space)
+    draw_policy(val_space)
     print("COMPLETE")
