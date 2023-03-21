@@ -33,8 +33,8 @@ print(policy)
 
 #let's walk the policy starting from a few different
 # initial states (results are saved to animated .gif files)
-cm.policy2gif(policy,[0,3],'cm1d_1')
-cm.policy2gif(policy,[0,2],'cm1d_2')
+#cm.policy2gif(policy,[0,3],'cm1d_1')
+#cm.policy2gif(policy,[0,2],'cm1d_2')
 
 #
 # End
@@ -58,9 +58,9 @@ print(policy)
 
 #let's walk the policy starting from a few different
 # initial states (results are saved to animated .gif files)
-cm.policy2gif(policy,[0,0],'cm2d_1')
-cm.policy2gif(policy,[0,3],'cm2d_2')
-cm.policy2gif(policy,[3,0],'cm2d_3')
+#cm.policy2gif(policy,[0,0],'cm2d_1')
+#cm.policy2gif(policy,[0,3],'cm2d_2')
+#cm.policy2gif(policy,[3,0],'cm2d_3')
 
 #
 # End
