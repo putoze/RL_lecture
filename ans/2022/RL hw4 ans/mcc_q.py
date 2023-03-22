@@ -47,7 +47,7 @@ def mcc_q(simenv, gamma, num_episodes, max_episode_len, printqPeriod=None, prng_
     policy = np.zeros((simenv.numStates, 1), dtype=np.int32)
     for i in range(simenv.numStates):
         policy[i] = prng.randint(0, simenv.numActions-1)
-
+    print(policy)
     # Start episode loop
     #
     for episode in range(num_episodes):
@@ -73,7 +73,7 @@ def mcc_q(simenv, gamma, num_episodes, max_episode_len, printqPeriod=None, prng_
             first_visit = False
             if not visited[current_state, action]:
                 first_visit = True
-            visited[current_state, action] = True
+                visited[current_state, action] = True
 
             episode_rewards.append(
                 (current_state, action, reward, first_visit))
@@ -100,7 +100,6 @@ def mcc_q(simenv, gamma, num_episodes, max_episode_len, printqPeriod=None, prng_
                 tot_first_visits[state, action] += 1
                 q[state, action] = q[state, action]+(1.0/tot_first_visits[state, action])*(
                     tot_return-q[state, action])  # incremental update of q(s,a) averages
-
                 # greedy policy update for this state
                 policy[state] = np.argmax(q[state])
 
@@ -111,4 +110,4 @@ def mcc_q(simenv, gamma, num_episodes, max_episode_len, printqPeriod=None, prng_
             print(q)
             print('%%%%%%\n')
 
-    return (policy, q)
+    return (policy, q, tot_first_visits)

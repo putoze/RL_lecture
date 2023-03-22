@@ -16,10 +16,19 @@
 
 ## part 1 gif
 <p align="middle">
-  <img src="image/cm_demo1.gif" width="800" />
+  <img src="image/cm_demo1_A.gif" width="800" />
+</p>
+<p align="middle">
+  <img src="image/cm_demo1_B.gif" width="800" />
 </p>
 
 ## part 2 gif
 <p align="middle">
-  <img src="image/cm_demo2.gif" width="800" />
+  <img src="image/cm_demo2_A.gif" width="800" />
+</p>
+<p align="middle">
+  <img src="image/cm_demo2_B.gif" width="800" />
+</p>
+<p align="middle">
+  <img src="image/cm_demo2_C.gif" width="800" />
 </p>

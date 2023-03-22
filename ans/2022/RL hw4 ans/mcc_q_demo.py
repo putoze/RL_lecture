@@ -23,8 +23,9 @@ np.set_printoptions(precision=3)
 cm=Cat_and_Mouse(rows=1,columns=7,mouseInitLoc=[0,3], cheeseLocs=[[0,0],[0,6]],stickyLocs=[[0,2]],slipperyLocs=[[0,4]])
 
 #Compute pi(s) & q(s,a) using Monte-Carlo method
-(policy,q)=mcc_q(cm,0.9,5000,100)
+(policy,q,tot_first_visits)=mcc_q(cm,0.9,500,100)
 
+print(tot_first_visits)
 print('q-function:')
 print(q)
 
@@ -47,7 +48,7 @@ print(policy)
 #    (generates animated .gif of mouse following estimated optimal policy)
 #
 #
-
+'''
 cm=Cat_and_Mouse(slipperyLocs=[[1,1],[2,1]],stickyLocs=[[2,4],[3,4]],catLocs=[[3,2],[3,3]])
 
 #Compute pi(s) & q(s,a) using Monte-Carlo method
@@ -55,7 +56,7 @@ cm=Cat_and_Mouse(slipperyLocs=[[1,1],[2,1]],stickyLocs=[[2,4],[3,4]],catLocs=[[3
 
 print('\nPolicy:')
 print(policy)
-
+'''
 #let's walk the policy starting from a few different
 # initial states (results are saved to animated .gif files)
 #cm.policy2gif(policy,[0,0],'cm2d_1')

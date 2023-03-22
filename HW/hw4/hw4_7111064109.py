@@ -1,5 +1,5 @@
 #
-# A brief demo & explanation of the Cat_and_Mouse simulation environment features
+# python ./hw4_7111064109.py
 #
 
 from cat_and_mouse import Cat_and_Mouse
@@ -7,9 +7,10 @@ import numpy as np
 
 # local define
 gamma = 0.9
-episode_num_part1 = 500
+episode_num_part1 = 5000
 episode_num_part2 = 50000
 max_iter = 100
+np.set_printoptions(precision=3)
 
 
 def episode(cm, policy, max_iter):
@@ -26,42 +27,36 @@ def episode(cm, policy, max_iter):
         (nextState, reward, gameOver) = cm.step(action)
         first_visit = False
         # define epi_list
-        if visit_dirty_bit[curr_state, action] == False:
+        if not visit_dirty_bit[curr_state, action]:
             visit_dirty_bit[curr_state, action] = True
             first_visit = True
-            epi_list.append((curr_state, action, reward, first_visit))
-        else:
-            epi_list.append((curr_state, action, reward, first_visit))
-        if gameOver == True:
+        # append epi_list
+        epi_list.append((curr_state, action, reward, first_visit))
+        # check if game over
+        if gameOver:
             break
-        # define action
-        action = policy[curr_state][0]
         # update current state
         curr_state = nextState
+        # define action
+        action = policy[curr_state][0]
         # update iter
         iter += 1
     # cm.reset()
-    epi_list.append(iter)
     return epi_list
 
 
 def loop_episode(epi_list, gamma, Q, policy, visit_times):
-    iter = epi_list.pop()
     G = 0
-    while iter > 0:
+    while len(epi_list) > 0:  # check if empty epi_list
         (St, At, R, first_visit) = epi_list.pop()
         G = gamma * G + R  # G = gamma*G + R(i+1)
-        iter -= 1
         # unless the pair St, At appears in S0,A0.....
-        if first_visit == True:
+        if first_visit:
             visit_times[St, At] += 1
             # P21 first visit incremental update
-            Q[St, At] = Q[St, At] + \
-                (1.0/visit_times[St, At]) * (G - Q[St, At])
+            Q[St, At] += (1.0/visit_times[St, At]) * (G - Q[St, At])
             # greedy policy update for this state
             policy[St] = np.argmax(Q[St])
-        # elif np.all(visit_dirty_bit):  # == np.ones([cm.numStates])
-        #    break
     return policy, Q, visit_times
 
 
@@ -77,22 +72,21 @@ if __name__ == '__main__':
     # initial Q
     Q = np.zeros((cm.numStates, cm.numActions), dtype=np.float32)
     # initial visit_times
-    visit_times = np.zeros([cm.numStates, cm.numActions])
+    visit_times = np.zeros((cm.numStates, cm.numActions), dtype=np.int32)
     # print initial policy
-    print("---- reshape policy1 ----")
+    print("---- reshape initial policy1 ----")
     print(policy.reshape(cm.rows, cm.columns))
+    # loop forever
     for i in range(episode_num_part1):
         epi_list = episode(cm, policy, max_iter)
         policy, Q, visit_times = loop_episode(
             epi_list, gamma, Q, policy, visit_times)
-        # if (i < 50):
-        #   print(visit_times)
-        #    print("the %d index is", i)
-        #    print(policy.reshape(cm.rows, cm.columns))
-        #   print(Q)
     # print final policy
+    print("---- reshape final policy1 ----")
     print(policy.reshape(cm.rows, cm.columns))
-    # cm.policy2gif(policy, cm.mouseInitLoc, 'cm_demo1')
+    # Gif
+    cm.policy2gif(policy, [0, 3], 'cm_demo1_A')
+    cm.policy2gif(policy, [0, 2], 'cm_demo1_B')
     print("---- Q1 ----")
     print(Q)
     print("------------ part2s ---------------")
@@ -108,14 +102,19 @@ if __name__ == '__main__':
     # initial visit_times
     visit_times = np.zeros([cm.numStates, cm.numActions])
     # print initial policy
+    print("---- reshape initial policy2 ----")
     print(policy2.reshape(cm.rows, cm.columns))
+    # loop forever
     for i in range(episode_num_part2):
         epi_list = episode(cm, policy2, max_iter)
         policy2, Q2, visit_times = loop_episode(
             epi_list, gamma, Q2, policy2, visit_times)
     # print final policy
-    print("---- reshape policy2 ----")
+    print("---- reshape final policy2 ----")
     print(policy2.reshape(cm.rows, cm.columns))
-    # cm.policy2gif(policy2, cm.mouseInitLoc, 'cm_demo2')
+    # Gif
+    cm.policy2gif(policy2, [0, 0], 'cm_demo2_A')
+    cm.policy2gif(policy2, [0, 4], 'cm_demo2_B')
+    cm.policy2gif(policy2, [2, 2], 'cm_demo2_C')
     print("---- Q2 ----")
     print(Q2)
