@@ -15,7 +15,6 @@
 # 4. Plot fitted curve vs. data
 #
 
-
 import torch
 import numpy as np
 
@@ -43,12 +42,8 @@ def make_random_data():
 x, y = make_random_data()
 
 plt.plot(x, y, 'o')
+plt.savefig('training_random_data.png')
 plt.show()
-
-#
-#
-############################################
-
 
 ############################################
 # 2. Create the quadratic regression model
@@ -58,19 +53,15 @@ plt.show()
 #
 with torch.no_grad():
     #note: we don't want initialization calculations to be included in gradient tracking
-    weight2=(0.25*torch.randn(size=(1,),dtype=torch.float32)).requires_grad_(True)
-    weight1=(0.25*torch.randn(size=(1,),dtype=torch.float32)).requires_grad_(True)
+    w=(0.25*torch.randn(size=(2,),dtype=torch.float32)).requires_grad_(True)
     bias=torch.tensor(0.0, dtype=torch.float32, requires_grad=True)
 
 def qua_reg_model(feature_input):
     feature_input=torch.tensor(feature_input,dtype=torch.float32)
     
-    output=weight2*feature_input**2+weight1*feature_input+bias
+    output=w[0]*feature_input**2+w[1]*feature_input+bias
     
     return output
-
-#Fill in the missing code here!
-
 
 #the MSE cost function
 #
@@ -80,32 +71,12 @@ def cost(model_out, target_input):
         
     return cost
 
-#Fill in the missing code here!
-
-#
-#
-############################################
-
 
 ############################################
 # 3. Train the model
-#
 
-#Fill in the missing code here!
+optim = torch.optim.SGD([w,bias], lr=0.01)
 
-optim = torch.optim.SGD([weight2,weight1,bias], lr=0.01)
-#
-#
-############################################
-
-
-############################################
-#
-
-#plot fitted curve vs. data
-#
-
-#Fill in the missing code here!
 n_epochs=401
 training_costs=[]
 for e in range(n_epochs):
@@ -119,24 +90,26 @@ for e in range(n_epochs):
  
 #plot cost vs. epochs
 plt.plot(training_costs)
+plt.savefig('training_costs.png')
 plt.show()
 
+############################################
 # 4. Plot fitted curve vs. data
 
 #plot fitted curve vs. data
 x_fit=np.linspace(-2.0, 4.0, 10)
-w2=weight2.detach().numpy()[0]
-w1=weight1.detach().numpy()[0]
+weight=w.detach().numpy()
 b=bias.detach().numpy()
 
 #print the final estimated w & b model values
 print()
-print('w2-fit: {} w1-fit: {} b-fit: {}'.format(w2,w1,b))
+print('w-fit: {}  b-fit: {}'.format(weight,b))
 
 #plot the results
-y_fit=w2*x_fit**2+w1*x_fit+b
+y_fit=weight[0]*x_fit**2+weight[1]*x_fit+b
 plt.plot(x_fit,y_fit)
 plt.plot(x, y, 'o')
+plt.savefig('training_fit.png')
 plt.show()
 
 #
