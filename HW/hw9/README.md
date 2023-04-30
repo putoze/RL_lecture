@@ -39,7 +39,7 @@
   <img src="img/experience_reply.png" width="800" />
 </p>
 <p align="middle">
-  <img src="img/experience_reply2.png" width="800" />
+  <img src="img/experience_reply_2.png" width="800" />
 </p>
 
 ## Result
