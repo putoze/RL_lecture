@@ -46,3 +46,9 @@
 <p align="middle">
   <img src="img/batch_size10.gif" width="500" />
 </p>
+
+## Reference
+
+[1] [Divergence in Deep Q-Learning: Tips and Tricks](https://amanhussain.com/post/divergence-deep-q-learning/)
+
+[2] [Rainbow: Combining Improvements in Deep Reinforcement Learning](https://arxiv.org/abs/1710.02298)
