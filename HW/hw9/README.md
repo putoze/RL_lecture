@@ -44,5 +44,5 @@
 
 ## Result
 <p align="middle">
-  <img src="img/batch_size10.gif" width="800" />
+  <img src="img/batch_size10.gif" width="500" />
 </p>
