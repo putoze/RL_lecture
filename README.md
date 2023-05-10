@@ -47,3 +47,5 @@ Off-policy Q-Learning sometimes causes "Dead Triad". How do we solve it?
 [2] [强化学习系列（十二）：Eligibility Traces](https://blog.csdn.net/LagrangeSK/article/details/82556644 ) 
 
 [3] [[Python教學] @property是什麼? 使用場景和用法介紹](https://www.maxlist.xyz/2019/12/25/python-property/)
+
+[4] [Deep Learning 從零開始到放棄的 30 天 PyTorch 數字辨識模型 系列](https://ithelp.ithome.com.tw/users/20132118/ironman/4690)
