@@ -39,6 +39,8 @@ Cat-Mouse env again! Learning our "Values" & "Policy" with NN model. Interesting
 - Hw9: Q-Learning with NN && Acrobot environment <br>
 Off-policy Q-Learning sometimes causes "Dead Triad". How do we solve it?
 
+- Hw10: Using Policy-gradient with Monte Carlo to implement the missing code in pg_mc.py
+
 ## Reference
 [1] [從根本學習Reinforcement Learning 系列](https://ithelp.ithome.com.tw/users/20129922/ironman/3342)
 
